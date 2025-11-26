@@ -1,0 +1,25 @@
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Virtual Environment (Crucial to ignore!)
+.venv/
+venv/
+env/
+
+# IDE settings
+.vscode/
+.idea/
+
+#testing files
+test_api.py
+test_comprehensive.py
+analyze_features.py
+train_model.py
+
+# Backups
+master_training_data_backup.csv
+master_training_data_original.csv
+
+# Optional: Ignore the large dataset if you want to save space
+# master_training_data.csv

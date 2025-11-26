@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMind AI | Professional Symptom Checker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div id="profile-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="logo-icon large" style="margin: 0 auto 20px auto; width: 64px; height: 64px; font-size: 28px;">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <h2 style="color: #2d3436; margin-bottom: 8px;">Welcome to MediMind</h2>
+            <p style="color: #636e72; font-size: 14px; margin-bottom: 24px;">Please provide your basic details for an accurate medical analysis.</p>
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Your Age</label>
+                <input type="number" id="input-age" placeholder="e.g. 25" min="1" max="120" 
+                       style="width: 100%; padding: 12px; border: 2px solid #dfe6e9; border-radius: 12px; font-size: 16px; outline:none;">
+            </div>
+            
+            <div class="form-group">
+                <label>Your Gender</label>
+                <div class="gender-options" style="display: flex; gap: 12px;">
+                    <button onclick="selectGender('Male', this)" class="gender-btn" 
+                            style="flex:1; padding:12px; border:2px solid #dfe6e9; background:white; border-radius:12px; cursor:pointer; font-weight:600; color:#636e72;">
+                        <i class="fa-solid fa-mars"></i> Male
+                    </button>
+                    <button onclick="selectGender('Female', this)" class="gender-btn"
+                            style="flex:1; padding:12px; border:2px solid #dfe6e9; background:white; border-radius:12px; cursor:pointer; font-weight:600; color:#636e72;">
+                        <i class="fa-solid fa-venus"></i> Female
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="saveProfile()" style="width:100%; padding:16px; background:#0984e3; color:white; border:none; border-radius:14px; font-size:16px; font-weight:700; cursor:pointer; margin-top:24px; box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);">
+                Start Consultation
+            </button>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <header class="chat-header">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                <div class="logo-text">
+                    <h1>MediMind</h1>
+                    <span><i class="fa-solid fa-circle" style="font-size: 8px;"></i> Online</span>
+                </div>
+            </div>
+            <button class="refresh-btn" onclick="location.reload()" title="Reset Session">
+                <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+        </header>
+
+        <div class="chat-container" id="chat-box">
+            </div>
+
+        <div class="typing-area" id="typing-indicator" style="display:none; padding: 10px 24px; background:transparent;">
+            <div style="background:white; padding:8px 16px; border-radius:16px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                <span style="font-size:12px; color:#636e72; margin-right:6px;">Analyzing</span>
+                <div class="typing-dot" style="width:6px; height:6px; background:#b2bec3; border-radius:50%;"></div>
+                <div class="typing-dot" style="width:6px; height:6px; background:#b2bec3; border-radius:50%;"></div>
+                <div class="typing-dot" style="width:6px; height:6px; background:#b2bec3; border-radius:50%;"></div>
+            </div>
+        </div>
+
+        <div class="input-zone">
+            <div class="input-wrapper">
+                <input type="text" id="user-input" placeholder="Type your symptoms here..." onkeypress="handleKey(event)" autocomplete="off">
+                <button class="send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+            <p style="text-align:center; font-size:11px; color:#b2bec3; margin-top:12px;">
+                <i class="fa-solid fa-shield-halved"></i> MediMind is an AI assistant. Always consult a real doctor.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let userProfile = { age: null, gender: null }; 
+
+        // --- UI LOGIC ---
+        function selectGender(type, btn) {
+            document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            userProfile.gender = (type === 'Male') ? 1 : 0;
+        }
+
+        function saveProfile() {
+            const ageVal = document.getElementById('input-age').value;
+            if (!ageVal || userProfile.gender === null) {
+                alert("Please complete your profile.");
+                return;
+            }
+            userProfile.age = parseInt(ageVal);
+            document.getElementById('profile-modal').style.display = 'none';
+            
+            const gText = userProfile.gender === 1 ? 'Male' : 'Female';
+            addMessage(`<b>Profile Set:</b> ${userProfile.age} years old, ${gText}.<br>Hello, I am MediMind. Please tell me what symptoms you are experiencing.`, 'ai');
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById("user-input");
+            const text = input.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            input.value = "";
+            
+            const loader = document.getElementById("typing-indicator");
+            loader.style.display = "block";
+            scrollToBottom();
+
+            try {
+                const response = await fetch("/analyze", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        symptoms: text,
+                        age: userProfile.age,
+                        gender: userProfile.gender
+                    })
+                });
+
+                const result = await response.json();
+                loader.style.display = "none";
+
+                if (result.question) {
+                    // It's a follow-up question
+                    addMessage(result.question, 'ai');
+                    
+                } else if (result.diagnosis && result.diagnosis.length > 0) {
+                    // It's a Final Diagnosis
+                    const diag = result.diagnosis[0];
+                    const prob = parseFloat(diag.probability);
+                    
+                    // --- CRITICAL CHECK ---
+                    // If the backend says "EMERGENCY", trigger the Red Card
+                    const isCritical = diag.recommendation.includes("EMERGENCY") || diag.recommendation.includes("CRITICAL");
+
+                    // Build the Medical Card HTML
+                    const cardHtml = `
+                        <div class="diagnosis-card">
+                            <h3>${diag.condition}</h3>
+                            <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; color:#636e72;">
+                                <span>Confidence</span>
+                                <span>${diag.probability}</span>
+                            </div>
+                            <div class="prob-bar-container">
+                                <div class="prob-bar" style="width: ${prob}%"></div>
+                            </div>
+                            <div class="rec-text">
+                                ${diag.recommendation}
+                            </div>
+                        </div>
+                    `;
+                    addMessage(cardHtml, 'ai', isCritical);
+
+                } else {
+                    addMessage(result.recommendation, 'ai');
+                }
+
+            } catch (error) {
+                loader.style.display = "none";
+                addMessage("⚠️ Connection Error. Please ensure the server is running.", 'ai', true);
+            }
+        }
+
+        function addMessage(html, sender, isCritical = false) {
+            const box = document.getElementById("chat-box");
+            const div = document.createElement("div");
+            
+            div.className = `message ${sender}-message`;
+            
+            // Icon Selection
+            let iconClass = 'fa-user';
+            if (sender === 'ai') iconClass = isCritical ? 'fa-triangle-exclamation' : 'fa-user-doctor';
+
+            // Critical Bubble Style
+            const bubbleClass = isCritical ? 'bubble critical' : 'bubble';
+
+            div.innerHTML = `
+                <div class="avatar"><i class="fa-solid ${iconClass}"></i></div>
+                <div class="${bubbleClass}">
+                    ${html}
+                </div>
+            `;
+            box.appendChild(div);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            const box = document.getElementById("chat-box");
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function handleKey(e) { if (e.key === "Enter") sendMessage(); }
+    </script>
+</body>
+</html>
