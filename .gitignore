@@ -15,7 +15,7 @@ env/
 test_api.py
 test_comprehensive.py
 analyze_features.py
-train_model.py
+
 
 # Backups
 master_training_data_backup.csv
