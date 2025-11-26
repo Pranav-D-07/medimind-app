@@ -150,7 +150,7 @@ disease_symptom_map = {}
 
 try:
     if os.path.exists(MODEL_FILE):
-        model = joblib.load(MODEL_FILE)
+        model = joblib.load(MODEL_FILE) # <--- BACK TO NORMAL
         meta = joblib.load(META_FILE)
         data_columns = meta.get('columns', [])
         disease_symptom_map = meta.get('disease_symptom_map', {})
