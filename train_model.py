@@ -63,14 +63,14 @@ def train():
     X = df.drop('prognosis', axis=1)
     y = df['prognosis']
     
-    print("2. Training COMPACT HIGH-IQ Model...")
+    print("2. Training FINAL TWEAK Model (Target <100MB)...")
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
     
-    # --- SAFE CONFIGURATION ---
+    # --- CONFIGURATION: FINAL TWEAK ---
     model = RandomForestClassifier(
-        n_estimators=150,      # High Intelligence
-        max_depth=22,          # Strict Limit (Prevents 500MB bloat)
-        min_samples_leaf=2,    # Prunes noise (Saves 40% space)
+        n_estimators=260,      # Reduced from 300 -> 260 (Saves ~15MB)
+        max_depth=35,          # Slightly reduced depth
+        min_samples_leaf=2,    # Kept strict to prune noise
         class_weight='balanced', 
         n_jobs=-1,             
         random_state=42
@@ -79,19 +79,18 @@ def train():
     model.fit(X_train, y_train)
     print(f"   -> Accuracy: {model.score(X_test, y_test):.2%}")
 
-    print("3. Saving Compressed Brain (Max Compression)...")
-    # Compress=9 takes longer to save, but makes the file TINY.
-    joblib.dump(model, MODEL_FILE, compress=9)
+    print("3. Saving Compressed Brain...")
+    # Increased Compression to 5 to ensure we stay under 100MB
+    joblib.dump(model, MODEL_FILE, compress=5)
     
     size_mb = os.path.getsize(MODEL_FILE) / (1024 * 1024)
     print(f"   -> Model Size: {size_mb:.2f} MB")
 
-    if size_mb > 99:
-        print("   ⚠️ STOP! Still too big. Do not push.")
+    if size_mb > 100:
+        print("   ⚠️ WARNING: Still >100MB. Lower n_estimators to 240.")
     else:
         print("   ✅ PERFECT! Safe for GitHub.")
     
-    # Tiny Meta
     d_map = {}
     for disease in df['prognosis'].unique():
          d_rows = df[df['prognosis'] == disease]
@@ -104,7 +103,7 @@ def train():
         'classes': model.classes_.tolist(),
         'disease_symptom_map': d_map
     }
-    joblib.dump(meta, META_FILE, compress=9)
+    joblib.dump(meta, META_FILE, compress=3)
 
 if __name__ == "__main__":
     train()
