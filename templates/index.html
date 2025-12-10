@@ -109,6 +109,10 @@
             const text = input.value.trim();
             if (!text) return;
 
+            // Remove any old buttons
+            const oldBtns = document.querySelector('.button-container');
+            if(oldBtns) oldBtns.remove();
+
             addMessage(text, 'user');
             input.value = "";
             
@@ -131,19 +135,20 @@
                 loader.style.display = "none";
 
                 if (result.question) {
-                    // It's a follow-up question
+                    // FIX: Directly display the question string
                     addMessage(result.question, 'ai');
                     
+                    // FIX: If it's a question type, show buttons
+                    if (result.type === 'question' || result.question.includes('?')) {
+                        showButtons();
+                    }
+
                 } else if (result.diagnosis && result.diagnosis.length > 0) {
-                    // It's a Final Diagnosis
                     const diag = result.diagnosis[0];
                     const prob = parseFloat(diag.probability);
                     
-                    // --- CRITICAL CHECK ---
-                    // If the backend says "EMERGENCY", trigger the Red Card
                     const isCritical = diag.recommendation.includes("EMERGENCY") || diag.recommendation.includes("CRITICAL");
 
-                    // Build the Medical Card HTML
                     const cardHtml = `
                         <div class="diagnosis-card">
                             <h3>${diag.condition}</h3>
@@ -168,6 +173,7 @@
             } catch (error) {
                 loader.style.display = "none";
                 addMessage("⚠️ Connection Error. Please ensure the server is running.", 'ai', true);
+                console.error(error);
             }
         }
 
@@ -177,11 +183,9 @@
             
             div.className = `message ${sender}-message`;
             
-            // Icon Selection
             let iconClass = 'fa-user';
             if (sender === 'ai') iconClass = isCritical ? 'fa-triangle-exclamation' : 'fa-user-doctor';
 
-            // Critical Bubble Style
             const bubbleClass = isCritical ? 'bubble critical' : 'bubble';
 
             div.innerHTML = `
@@ -192,6 +196,27 @@
             `;
             box.appendChild(div);
             scrollToBottom();
+        }
+
+        // --- NEW BUTTON LOGIC ---
+        function showButtons() {
+            const box = document.getElementById("chat-box");
+            const div = document.createElement("div");
+            div.className = "button-container";
+            div.innerHTML = `
+                <button class="quick-btn" onclick="sendQuickReply('Yes')">Yes</button>
+                <button class="quick-btn" onclick="sendQuickReply('No')">No</button>
+            `;
+            box.appendChild(div);
+            scrollToBottom();
+        }
+
+        function sendQuickReply(val) {
+            const btnDiv = document.querySelector(".button-container");
+            if(btnDiv) btnDiv.remove(); // Clean up buttons
+            
+            document.getElementById("user-input").value = val;
+            sendMessage();
         }
 
         function scrollToBottom() {

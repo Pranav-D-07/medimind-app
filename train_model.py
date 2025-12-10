@@ -11,7 +11,6 @@ MODEL_FILE = 'model.joblib'
 META_FILE = 'meta.joblib'
 
 def purify_data(df):
-    print("   🧹 Purifying data...")
     synonyms = {
         'abdominal distention': ['stomach bloating', 'swollen abdomen'],
         'shortness of breath': ['dyspnea', 'difficulty breathing'],

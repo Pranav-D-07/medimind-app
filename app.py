@@ -24,7 +24,8 @@ GENDER_RESTRICTIONS = {
         'vulvodynia', 'pregnancy', 'endometriosis', 'ovarian cyst', 
         'pcos', 'polycystic ovarian syndrome', 'cervical cancer', 
         'uterine fibroids', 'vaginitis', 'menopause', 'breast cancer',
-        'preeclampsia', 'gestational diabetes', 'turner syndrome'
+        'preeclampsia', 'gestational diabetes', 'turner syndrome', 
+        'ectopic pregnancy'
     ]
 }
 
@@ -34,113 +35,127 @@ GENDER_SYMPTOMS = {
     'Female': ['vaginal', 'menstruation', 'period', 'pregnancy', 'uterine', 'ovarian', 'breast', 'vulva']
 }
 
-# 3. SEVERITY DICT (Updated for Merged Datasets)
+# 3. SEVERITY DICT (Updated for New Dataset)
 SEVERITY_DICT = {
-    # --- CRITICAL EMERGENCIES (RED ALERT - Hospital Now) ---
-    'heart attack': 'CRITICAL',
-    'stroke': 'CRITICAL',
-    'stroke warning (tia)': 'CRITICAL',
-    'cardiac arrest': 'CRITICAL',
-    'kidney failure': 'CRITICAL',
+    # --- CRITICAL (EMERGENCY - CALL 911/AMBULANCE) ---
+    'myocardial infarction (heart attack)': 'CRITICAL',
+    'stroke (ischemic/hemorrhagic)': 'CRITICAL',
+    'pulmonary embolism': 'CRITICAL',
+    'ards (acute respiratory distress syndrome)': 'CRITICAL',
     'sepsis': 'CRITICAL',
     'meningitis': 'CRITICAL',
-    'appendicitis': 'CRITICAL',
-    'pulmonary embolism': 'CRITICAL',
-    'pneumothorax': 'CRITICAL',
+    'ectopic pregnancy': 'CRITICAL',
+    'acute kidney injury': 'CRITICAL',
     'hypoglycemia': 'CRITICAL',
-    'brain hemorrhage': 'CRITICAL',
-    'paralysis': 'CRITICAL',
-    'heart failure': 'CRITICAL',
+    'pericarditis': 'CRITICAL',
+    'endocarditis': 'CRITICAL',
+    'deep vein thrombosis (dvt)': 'CRITICAL',
     
-    # --- HIGH SEVERITY (ORANGE ALERT - See Doctor Today) ---
-    'fracture': 'HIGH',
-    'dislocation': 'HIGH',
-    'head injury': 'HIGH',
-    'kidney infection': 'HIGH',
-    'kidney stones': 'HIGH',
-    'gallbladder disease': 'HIGH',
-    'arrhythmia': 'HIGH',
-    'heart valve disease': 'HIGH',
-    'heart inflammation': 'HIGH',
+    # --- HIGH (SEE DOCTOR TODAY / URGENT CARE) ---
     'pneumonia': 'HIGH',
-    'tuberculosis': 'HIGH',
+    'appendicitis': 'HIGH',
+    'pancreatitis': 'HIGH',
+    'cholecystitis (gallbladder inflammation)': 'HIGH',
     'dengue': 'HIGH',
     'malaria': 'HIGH',
-    'typhoid': 'HIGH',
-    'cancer (lung)': 'HIGH',
-    'cancer (breast)': 'HIGH',
-    'cancer (prostate)': 'HIGH',
-    'cancer (colon)': 'HIGH',
-    'cancer (skin)': 'HIGH',
-    'liver disease': 'HIGH',
+    'typhoid fever': 'HIGH',
+    'tuberculosis': 'HIGH',
+    'hepatitis b (chronic)': 'HIGH',
+    'heart failure': 'HIGH',
+    'jaundice': 'HIGH',
     
-    # --- MILD CONDITIONS (STANDARD - General Physician) ---
-    'viral infection': 'MILD',
+    # --- MILD / CHRONIC (GENERAL PHYSICIAN) ---
     'common cold': 'MILD',
-    'flu': 'MILD',
-    'throat infection': 'MILD',
-    'ear infection': 'MILD',
-    'eye infection': 'MILD',
-    'sinusitis': 'MILD',
+    'influenza (flu)': 'MILD',
+    'covid-19': 'MILD',
     'bronchitis': 'MILD',
-    'stomach flu': 'MILD',
-    'gastritis/ulcer': 'MILD',
-    'urinary tract infection': 'MILD',
-    'hemorrhoids': 'MILD',
-    'anal fissure/fistula': 'MILD',
-    'dermatitis': 'MILD',
-    'fungal skin infection': 'MILD',
-    'bacterial skin infection': 'MILD',
-    'stye': 'MILD',
-    'dental injury': 'MILD',
-    'physical injury': 'MILD',
+    'sinusitis': 'MILD',
+    'asthma': 'MILD',
+    'gastroenteritis (stomach flu)': 'MILD',
+    'gerd (acid reflux)': 'MILD',
+    'peptic ulcer disease': 'MILD',
     'migraine': 'MILD',
-    'headache': 'MILD',
-    'back pain/sciatica': 'MILD',
-    'anxiety/panic': 'MILD',
-    'depression': 'MILD',
-    'diabetes': 'MILD',
-    'hypertension': 'MILD',
-    'gerd': 'MILD',
-    'allergy': 'MILD',
-    'alcohol-related disorder': 'MILD',
-    'substance abuse': 'MILD'
+    'anxiety disorder': 'MILD',
+    'urinary tract infection (uti)': 'MILD',
+    'eczema (atopic dermatitis)': 'MILD',
+    'psoriasis': 'MILD',
+    'acne vulgaris': 'MILD',
+    'contact dermatitis': 'MILD',
+    'fungal skin infection (tinea)': 'MILD',
+    'chickenpox (varicella)': 'MILD',
+    'osteoarthritis': 'MILD'
 }
+
 # 4. RED FLAG SYMPTOMS (Triggers "Zero Tolerance" Mode)
 RED_FLAG_SYMPTOMS = [
     # Heart
-    'sharp chest pain', 'chest tightness', 'palpitations', 'crushing chest pain',
+    'chest pain', 'sharp chest pain', 'chest tightness', 'chest pressure', 'palpitations',
     # Stroke / Brain
-    'slurring words', 'hemiplegia', 'loss of sensation', 'paralysis',
-    'sudden severe headache', 'stiff neck', 'confusion', 'unconsciousness',
+    'face drooping', 'arm weakness', 'speech difficulty', 'confusion', 'severe headache',
     # Severe Bleeding / Internal
-    'coughing up blood', 'vomiting blood', 'blood in stool', 'melena', 'black stools'
+    'blood in sputum', 'blood in urine', 'dark urine', 'blue skin'
 ]
 
 # 5. SYMPTOM MAPPING (Slang -> Official Columns)
 SYMPTOM_DICT = {
-    "hot": ["fever"],
-    "burning": ["fever"],
-    "pee": ["urinary issues"],
-    "peeing": ["urinary issues"],
-    "urine": ["urinary issues"],
-    "bloating": ["abdominal distention"],
-    "breath": ["shortness of breath"],
-    "breathing": ["shortness of breath"],
-    "dyspnea": ["shortness of breath"],
-    "dizzy": ["dizziness"],
-    "ache": ["muscle pain"],
-    "faint": ["fainting"],
+    # TEMPERATURE
+    "hot": ["fever", "high fever", "mild fever"],
+    "burning": ["fever", "burning stomach pain"],
+    "chills": ["chills", "shaking chills"],
+    "sweat": ["sweating", "night sweats", "heavy sweating"],
+    
+    # PAIN (GENERAL)
+    "pain": ["muscle pain", "joint pain", "abdominal pain", "chest pain", "headache", "facial pain"],
+    "ache": ["muscle pain", "headache", "stomach pain", "back pain"],
+    "hurt": ["muscle pain", "sore throat", "painful urination"],
+    
+    # CHEST / HEART
+    "chest": ["chest pain", "sharp chest pain", "chest tightness", "chest pressure", "chest discomfort"],
+    "heart": ["chest pain", "palpitations", "irregular heartbeat", "missed heartbeats"],
+    "beating": ["palpitations", "irregular heartbeat"],
+    
+    # BREATHING
+    "breath": ["shortness of breath", "severe shortness of breath", "difficulty breathing", "rapid breathing"],
+    "gasping": ["shortness of breath", "difficulty breathing"],
+    "wheeze": ["wheezing"],
+    
+    # STOMACH / GUT
+    "stomach": ["stomach pain", "abdominal pain", "burning stomach pain", "upper right abdominal pain", "severe abdominal pain"],
+    "tummy": ["stomach pain", "abdominal pain"],
+    "belly": ["abdominal pain"],
+    "bloated": ["bloating"],
     "puke": ["vomiting"],
-    "sick": ["nausea", "vomiting"],
-    "stomach": ["stomach_pain", "abdominal distention"],
-    # CRITICAL MAPPINGS (Ensure these catch the user's input)
-    "chest": ["sharp chest pain", "chest tightness"], 
-    "heart": ["sharp chest pain", "chest tightness"],
-    "pain": ["sharp chest pain", "muscle pain"],
-    "stiff": ["stiff neck", "muscle stiffness"],
-    "bleed": ["hemoptysis", "vomiting blood", "rectal bleeding"],
-    "blood": ["hemoptysis", "vomiting blood", "rectal bleeding"]
+    "throw up": ["vomiting"],
+    "nauseous": ["nausea"],
+    "sick": ["nausea", "vomiting", "feeling ill"],
+    
+    # BATHROOM
+    "poop": ["diarrhea", "constipation", "pale stools"],
+    "runs": ["diarrhea"],
+    "pee": ["painful urination", "frequent urination", "dark urine", "blood in urine", "urinary urgency", "reduced urine output"],
+    "urine": ["painful urination", "frequent urination", "cloudy urine", "dark urine", "blood in urine"],
+    
+    # HEAD / NEURO
+    "head": ["headache", "severe headache", "migraine"],
+    "dizzy": ["dizziness", "fainting"],
+    "faint": ["fainting", "dizziness"],
+    "confused": ["confusion"],
+    
+    # SKIN / VISIBLE
+    "rash": ["skin rash", "red rash", "itchy rash", "ring-shaped rash"],
+    "itch": ["itchy skin", "itching", "severe itching"],
+    "red": ["redness", "red rash"],
+    "yellow": ["jaundice", "yellow skin", "yellow eyes"],
+    "pale": ["pale stools", "fatigue"],
+    "blue": ["blue skin"],
+    "swollen": ["leg swelling", "swelling"],
+    
+    # THROAT / COLD
+    "cold": ["nasal congestion", "runny nose", "cough", "sore throat", "chills"], # <--- ADD THIS
+    "throat": ["sore throat", "difficulty swallowing"],
+    "nose": ["nasal congestion", "runny nose", "sneezing", "nosebleed", "thick nasal discharge"],
+    "sneeze": ["sneezing"],
+    "cough": ["cough", "persistent cough", "productive cough", "dry cough"]
 }
 
 # --- LOAD AI BRAIN ---
@@ -150,7 +165,7 @@ disease_symptom_map = {}
 
 try:
     if os.path.exists(MODEL_FILE):
-        model = joblib.load(MODEL_FILE) # <--- BACK TO NORMAL
+        model = joblib.load(MODEL_FILE)
         meta = joblib.load(META_FILE)
         data_columns = meta.get('columns', [])
         disease_symptom_map = meta.get('disease_symptom_map', {})
@@ -290,14 +305,15 @@ def analyze():
 
     if probs.sum() > 0: probs = probs / probs.sum()
 
-    # Get Top 3 Candidates (As requested)
+    # Get Top 3 Candidates
     top_indices = np.argsort(probs)[::-1][:3]
     candidates = []
     for i in top_indices:
         candidates.append({
             'disease': model.classes_[i],
             'prob': probs[i] * 100,
-            'severity': SEVERITY_DICT.get(model.classes_[i], 'MILD')
+            # FIXED: .lower() allows matching "Heart Attack" to "heart attack"
+            'severity': SEVERITY_DICT.get(model.classes_[i].lower(), 'MILD')
         })
 
     # --- 6. SMART PARANOID SORTING ---
@@ -306,8 +322,6 @@ def analyze():
     has_red_flag = any(s in RED_FLAG_SYMPTOMS for s in session['symptoms'])
     
     # B. Set Dynamic Threshold
-    # If Red Flag exists: 0.1% (Zero Tolerance) -> Triggers alert even if prob is tiny.
-    # If Vague Symptoms: 15.0% (Standard) -> Prevents "Nausea" -> Heart Attack panic.
     safety_threshold = 0.1 if has_red_flag else 15.0
     
     primary = candidates[0]
@@ -330,7 +344,7 @@ def analyze():
 
     # STRATEGY A: IMMEDIATE EMERGENCY (Skip questions)
     if primary['severity'] == 'CRITICAL':
-        pass # Fall through to Final Result immediately (Trigger Red Card)
+        pass 
 
     # STRATEGY B: Check for Hidden Dangers (Runner Up)
     elif critical_runner_up:
@@ -344,7 +358,8 @@ def analyze():
             session['last_question'] = next_question
             clean_q = next_question.replace('_', ' ')
             return jsonify({
-                'question': f"I want to be safe. Do you also experience <b>{clean_q}</b>?"
+                'question': f"I want to be safe. Do you also experience <b>{clean_q}</b>?",
+                'type': 'question' # FIXED: Added type for frontend
             })
 
     # STRATEGY C: Clarify Low Confidence
@@ -359,7 +374,8 @@ def analyze():
             session['last_question'] = next_question
             clean_q = next_question.replace('_', ' ')
             return jsonify({
-                'question': f"Do you have <b>{clean_q}</b>?"
+                'question': f"Do you have <b>{clean_q}</b>?",
+                'type': 'question' # FIXED: Added type for frontend
             })
 
     # --- 8. FINAL RESULT ---
@@ -367,6 +383,8 @@ def analyze():
     
     if primary['severity'] == 'CRITICAL':
         reco = "⚠️ <b>EMERGENCY: Please visit a hospital immediately.</b>"
+    elif primary['severity'] == 'HIGH': # FIXED: Added HIGH severity check
+        reco = "<b>This could be serious. Please see a doctor TODAY.</b>"
     elif critical_runner_up:
          reco = f"Likely {primary['disease']}, but cannot rule out {critical_runner_up['disease']}. <b>Please seek medical attention.</b>"
     elif primary['prob'] < 40:
