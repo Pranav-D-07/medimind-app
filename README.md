@@ -1,35 +1,80 @@
 # MediMind
 
-Lightweight symptom-to-diagnosis assistant.
+MediMind is a personal project: a lightweight web app to help track mood, access mental health resources, and keep simple journaling. This README provides quick setup and development notes so you can get the project running locally.
 
-Quick start
+## Key features
 
-1. Create a Python virtual environment and install dependencies:
+- Mood tracking (daily entries)
+- Quick journal notes
+- Resource links and help information
+- Simple, privacy-first design for local-first usage
 
-```powershell
-python -m venv .venv; .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
+## Tech overview
 
-2. Train the model (this creates `model.pkl` and `meta.pkl`):
+This repository contains the app code for the MediMind project. Depending on how you've structured the repo, the project may include a frontend (React, Vue, or similar) and/or a backend (Node/Express, Flask, etc). The instructions below assume a typical Node-based development workflow. Adjust commands to match your stack.
 
-```powershell
-python train_model.py
-```
+## Quick start (local)
 
-3. Run the app:
+Prerequisites
+- Node.js (14+ recommended) and npm or yarn
+- Git
 
-```powershell
-python app.py
-```
+Steps
+1. Clone the repo
+   git clone https://github.com/Pranav-D-07/medimind-app.git
+   cd medimind-app
 
-Notes
+2. Install dependencies
+   npm install
+   # or
+   yarn install
 
-- `train_model.py` now trains with a train/test split, uses class balancing, optionally calibrates probabilities, prints evaluation metrics, and saves metadata to `meta.pkl`.
-- `app.py` loads `meta.pkl` (falls back to `columns.pkl`) and uses fuzzy matching (via `rapidfuzz`) for symptom extraction, returns top-3 diagnoses, and asks focused follow-ups using feature importances saved in `meta.pkl`.
-- For explainability, `shap` is included in `requirements.txt`; computing SHAP explanations in real time may be slow—consider precomputing or enabling it conditionally.
+3. Create environment variables
+   - Copy .env.example to .env and update any required values (API keys, ports, etc).
 
-If you want, I can:
-- Add SHAP-based per-prediction explanations (visual + textual).
-- Add unit tests for `extract_symptoms()` and prediction flow.
-- Add UI buttons for quick `Yes`/`No` responses to follow-up questions.
+4. Run the app in development
+   npm run dev
+   # or
+   yarn dev
+
+5. Build for production
+   npm run build
+   npm start
+
+## Project structure (example)
+
+- /client  - frontend app (if present)
+- /server  - backend API (if present)
+- /scripts - build or utility scripts
+- README.md - this file
+
+Adjust according to the actual file layout in this repository.
+
+## Environment variables
+
+Add a .env file at the project root with any required variables. Typical variables:
+- PORT=3000
+- NODE_ENV=development
+- DATABASE_URL=sqlite://... or other connection string
+
+## Tests
+
+If tests are included, run them with:
+
+npm test
+# or
+yarn test
+
+## Contributing
+
+This is a personal project — feel free to open issues or PRs if you want to collaborate. Keep changes small and focused.
+
+## License
+
+Add your preferred license here (MIT is a common choice for personal projects).
+
+## Contact
+
+If you need to reach me about the project, my GitHub is https://github.com/Pranav-D-07
+
+(If you'd like I can tailor this README to the exact tech stack and commands used in this repo — tell me which framework(s) you used and I'll update the file.)
