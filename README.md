@@ -76,5 +76,3 @@ Add your preferred license here (MIT is a common choice for personal projects).
 ## Contact
 
 If you need to reach me about the project, my GitHub is https://github.com/Pranav-D-07
-
-(If you'd like I can tailor this README to the exact tech stack and commands used in this repo — tell me which framework(s) you used and I'll update the file.)
